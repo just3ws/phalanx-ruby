@@ -36,22 +36,24 @@ class Card
   end
 end
 
-values = (2..9)
+VALUES = (2..9)
 
-deck = SortedSet.new
-SUITES.each { |suite| values.each { |value| deck << Card.new(suite, value) } }
+module Game
+  def self.make_player
+    deck = SUITES.flat_map { |suite| VALUES.map { |value| Card.new(suite, value) } }
+    deck.shuffle!
 
-deck = deck.to_a.shuffle
+    hand = deck.shift(12)
+    hand.sort!.reverse!
 
-hand = deck.shift(12)
-hand.sort!
-hand.reverse!
+    rows = { front: hand.shift(4), back: hand.shift(4) }
 
-rows = {
-  front: hand.shift(4),
-  back: hand.shift(4)
-}
+    { hand:, rows:, deck:, discard: [] }
+  end
+end
 
-player = { hand:, rows: }
+player_a = Game.make_player
+ap player_a
 
-ap player
+player_b = Game.make_player
+ap player_b
