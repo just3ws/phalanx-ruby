@@ -11,7 +11,8 @@ Gem::Specification.new do |spec|
   spec.summary = 'Ruby implementation of the Phalanx card game'
   spec.description = 'Play Phalanx against a virtual opponent'
   spec.homepage = 'https://github.com/just3ws/phalanx-ruby'
-  spec.license = 'MIT'
+  spec.license = 'GPL-3.0'
+  spec.licenses = %w[GPL-3.0]
   spec.required_ruby_version = '>= 3.1'
 
   spec.metadata['allowed_push_host'] = 'not yet'
