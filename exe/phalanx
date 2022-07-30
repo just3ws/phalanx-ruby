@@ -1,4 +1,25 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "phalanx"
+require 'phalanx'
+
+require 'amazing_print'
+
+puts 'HELLO'
+
+CLUB = 'C'
+CLUB_GLYPH = '♣'
+DIAMOND = 'D'
+DIAMOND_GLYPH = '♦'
+GLYPH_HEART = '♥'
+HEART = 'H'
+SPADE = 'S'
+SPADE_GLYPH = '♠'
+
+range = (2..9)
+ap range.to_a
+
+player = {
+  front: [],
+  back: []
+}

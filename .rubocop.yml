@@ -1,13 +1,30 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+  - rubocop-rubycw
+  - rubocop-thread_safety
+
 AllCops:
+  CacheRootDirectory: 'tmp/'
+  DefaultFormatter: fuubar
+  DisabledByDefault: false
+  DisplayCopNames: true
+  DisplayStyleGuide: true
+  ExtraDetails: true
+  MaxFilesInCache: 65536
+  NewCops: enable
   TargetRubyVersion: 3.1
+  UseCache: true
 
-Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: double_quotes
-
-Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
-
-Layout/LineLength:
-  Max: 120
+Lint/EmptyBlock: {Enabled: false}
+Lint/SuppressedException: {Enabled: false}
+Naming/InclusiveLanguage: {Enabled: false}
+Style/BlockDelimiters: {Enabled: false}
+Style/Documentation: {Enabled: false}
+Style/FrozenStringLiteralComment: {Enabled: true, SafeAutoCorrect: true}
+Style/MultilineBlockChain: {Enabled: false}
+Style/RescueModifier: {Enabled: false}
+Style/RescueStandardError: {Enabled: false}

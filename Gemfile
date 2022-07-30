@@ -1,12 +1,20 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 # Specify your gem's dependencies in phalanx.gemspec
 gemspec
 
-gem "rake", "~> 13.0"
+gem 'rake', '~> 13.0'
 
-gem "rspec", "~> 3.0"
+gem 'rspec', '~> 3.0'
 
-gem "rubocop", "~> 1.21"
+gem 'rubocop', require: false
+gem 'rubocop-performance', require: false
+gem 'rubocop-rake', require: false
+gem 'rubocop-require_tools', require: false
+gem 'rubocop-rspec', require: false
+gem 'rubocop-rubycw', require: false
+gem 'rubocop-thread_safety', require: false
+
+gem 'amazing_print'
