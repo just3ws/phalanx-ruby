@@ -48,7 +48,7 @@ module Game
 
     rows = { front: hand.shift(4), back: hand.shift(4) }
 
-    { hand:, rows:, deck:, discard: [] }
+    { hand:, rows:, deck:, discard: [], damage: [] }
   end
 end
 
