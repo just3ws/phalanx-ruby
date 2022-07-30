@@ -15,6 +15,7 @@ GEM
       ast (~> 2.4.1)
     rainbow (3.1.1)
     rake (13.0.6)
+    rbtree (0.4.5)
     regexp_parser (2.5.0)
     rexml (3.2.5)
     rspec (3.11.0)
@@ -56,6 +57,10 @@ GEM
     rubocop-thread_safety (0.4.4)
       rubocop (>= 0.53.0)
     ruby-progressbar (1.11.0)
+    set (1.0.2)
+    sorted_set (1.0.3)
+      rbtree
+      set (~> 1.0)
     unicode-display_width (2.2.0)
 
 PLATFORMS
@@ -73,6 +78,7 @@ DEPENDENCIES
   rubocop-rspec
   rubocop-rubycw
   rubocop-thread_safety
+  sorted_set
 
 BUNDLED WITH
    2.3.19

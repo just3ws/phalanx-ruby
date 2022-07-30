@@ -3,23 +3,55 @@
 
 require 'phalanx'
 
+require 'sorted_set'
 require 'amazing_print'
 
-puts 'HELLO'
+CLUB = '♣'
+DIAMOND = '♦'
+HEART = '♥'
+SPADE = '♠'
 
-CLUB = 'C'
-CLUB_GLYPH = '♣'
-DIAMOND = 'D'
-DIAMOND_GLYPH = '♦'
-GLYPH_HEART = '♥'
-HEART = 'H'
-SPADE = 'S'
-SPADE_GLYPH = '♠'
+SUITES = [CLUB, DIAMOND, HEART, SPADE].freeze
 
-range = (2..9)
-ap range.to_a
+class Card
+  include Comparable
 
-player = {
-  front: [],
-  back: []
+  attr_reader :suite, :value
+
+  def initialize(suite, value)
+    @suite = suite
+    @value = value
+  end
+
+  def to_s
+    [suite, value].join
+  end
+
+  def to_a
+    [value, suite]
+  end
+
+  def <=>(other)
+    to_a <=> other.to_a
+  end
+end
+
+values = (2..9)
+
+deck = SortedSet.new
+SUITES.each { |suite| values.each { |value| deck << Card.new(suite, value) } }
+
+deck = deck.to_a.shuffle
+
+hand = deck.shift(12)
+hand.sort!
+hand.reverse!
+
+rows = {
+  front: hand.shift(4),
+  back: hand.shift(4)
 }
+
+player = { hand:, rows: }
+
+ap player

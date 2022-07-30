@@ -18,3 +18,5 @@ gem 'rubocop-rubycw', require: false
 gem 'rubocop-thread_safety', require: false
 
 gem 'amazing_print'
+
+gem 'sorted_set'
