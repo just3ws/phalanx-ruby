@@ -3,92 +3,57 @@
 
 require 'phalanx'
 
-require 'sorted_set'
 require 'amazing_print'
 
-CLUB = '♣'
-DIAMOND = '♦'
-HEART = '♥'
-SPADE = '♠'
+module Phalanx
+  class Rows
+    attr_reader :front, :back
 
-SUITES = [CLUB, DIAMOND, HEART, SPADE].freeze
-
-class Card
-  include Comparable
-
-  attr_reader :suite, :value
-
-  def initialize(suite, value)
-    @suite = suite
-    @value = value
+    def initialize(front:, back:)
+      @front = front
+      @back = back
+    end
   end
 
-  def inspect
-    to_s
+  class Player
+    attr_reader :hand, :rows, :deck, :discard, :damage
+
+    def initialize(hand:, rows:, deck:, discard: [], damage: [])
+      @hand = hand
+      @rows = rows
+      @deck = deck
+      @discard = discard
+      @damage = damage
+    end
   end
 
-  def to_s
-    to_a.join
+  class Deck
+    def initialize
+      @deck = Suits.all.flat_map { |suit| Values.numbered_cards.map { |value| Card.new(suit, value) } }
+      @deck.shuffle!
+    end
+
+    def draw(count)
+      @deck.shift(count)
+    end
   end
 
-  def to_a
-    [value, suite]
-  end
+  module Game
+    def self.make_player
+      deck = Deck.new
 
-  def <=>(other)
-    to_a <=> other.to_a
-  end
-end
+      hand = deck.draw(12)
+      hand.sort!.reverse!
 
-class Rows
-  attr_reader :front, :back
+      rows = Rows.new(front: hand.shift(4), back: hand.shift(4))
 
-  def initialize(front:, back:)
-    @front = front
-    @back = back
-  end
-end
-
-class Player
-  attr_reader :hand, :rows, :deck, :discard, :damage
-
-  def initialize(hand:, rows:, deck:, discard: [], damage: [])
-    @hand = hand
-    @rows = rows
-    @deck = deck
-    @discard = discard
-    @damage = damage
+      Player.new(hand:, rows:, deck:)
+    end
   end
 end
 
-VALUES = (2..9)
-
-class Deck
-  def initialize
-    @deck = SUITES.flat_map { |suite| VALUES.map { |value| Card.new(suite, value) } }
-    @deck.shuffle!
-  end
-
-  def draw(count)
-    @deck.shift(count)
-  end
-end
-
-module Game
-  def self.make_player
-    deck = Deck.new
-
-    hand = deck.draw(12)
-    hand.sort!.reverse!
-
-    rows = Rows.new(front: hand.shift(4), back: hand.shift(4))
-
-    Player.new(hand:, rows:, deck:)
-  end
-end
-
-player_a = Game.make_player
+player_a = Phalanx::Game.make_player
 ap [:player_a, player_a]
 
-player_b = Game.make_player
+player_b = Phalanx::Game.make_player
 ap [:player_b, player_b]

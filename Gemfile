@@ -7,7 +7,7 @@ gemspec
 
 gem 'rake', '~> 13.0'
 
-gem 'rspec', '~> 3.0'
+gem 'rspec', '~> 3.11'
 
 gem 'rubocop', require: false
 gem 'rubocop-performance', require: false
@@ -17,6 +17,6 @@ gem 'rubocop-rspec', require: false
 gem 'rubocop-rubycw', require: false
 gem 'rubocop-thread_safety', require: false
 
-gem 'amazing_print'
+gem 'retest', require: false
 
-gem 'sorted_set'
+gem 'amazing_print'
