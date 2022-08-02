@@ -6,10 +6,11 @@ module Phalanx
     DIAMOND = '♦'
     HEART = '♥'
     SPADE = '♠'
+    NULL = '_'
 
     ALL = [CLUB, DIAMOND, HEART, SPADE].freeze
 
-    def self.null = ''
+    def self.null = NULL
     def self.club = CLUB
     def self.diamond = DIAMOND
     def self.heart = HEART

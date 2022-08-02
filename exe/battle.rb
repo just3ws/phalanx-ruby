@@ -2,25 +2,8 @@
 # frozen_string_literal: true
 
 require 'amazing_print'
-
-CLUB = 'C'
-SPADE = 'S'
-HEART = 'H'
-DIAMOND = 'D'
-NULL = 'N'
-
-class Card
-  attr_reader :suit, :value
-
-  def initialize(suit, value)
-    @suit = suit
-    @value = suit == NULL ? 0 : value
-  end
-
-  def to_s
-    [suit, value.to_s.rjust(2, '0')].join
-  end
-end
+require_relative '../lib/phalanx/suits'
+require_relative '../lib/phalanx/card'
 
 class Battle
   attr_accessor :attack, :front_health, :back_health
@@ -45,25 +28,25 @@ class Battle
     front_health = front.value - attack
 
     # Diamond defense bonus
-    front_health += front.value if front.suit == DIAMOND && back.suit != NULL
+    front_health += front.value if front.suit == Phalanx::Suits.diamond && back.suit != Phalanx::Suits.null
 
     @attack -= front.value
 
     # Heart defense bonus
-    @attack -= front.value if front.suit == HEART && back.suit == NULL
+    @attack -= front.value if front.suit == Phalanx::Suits.heart && back.suit == Phalanx::Suits.null
 
     back_health = back.value - attack
 
     # Club attack bonus
-    back_health -= attack if attacker.suit == CLUB
+    back_health -= attack if attacker.suit == Phalanx::Suits.club
 
     @attack -= back.value
 
     # Heart defense bonus
-    @attack -= back.value if back.suit == HEART
+    @attack -= back.value if back.suit == Phalanx::Suits.heart
 
     # Spade attack bonus
-    @attack += attack if attacker.suit == SPADE
+    @attack += attack if attacker.suit == Phalanx::Suits.spade
 
     {
       to_s => {
@@ -75,7 +58,8 @@ class Battle
 end
 
 ATTACKER_VALUE_RANGE = FRONT_VALUE_RANGE = BACK_VALUE_RANGE = (1..11)
-ATTACKER_SUITS = FRONT_SUITS = BACK_SUITS = [SPADE, HEART, CLUB, DIAMOND, NULL].freeze
+ATTACKER_SUITS = FRONT_SUITS = BACK_SUITS = [Phalanx::Suits.spade, Phalanx::Suits.heart, Phalanx::Suits.club,
+                                             Phalanx::Suits.diamond, Phalanx::Suits.null].freeze
 
 ATTACKER_SUITS.each do |attacker_suit|
   ATTACKER_VALUE_RANGE.each do |attacker_value|
@@ -83,12 +67,12 @@ ATTACKER_SUITS.each do |attacker_suit|
       FRONT_VALUE_RANGE.each do |front_value|
         BACK_SUITS.each do |back_suit|
           BACK_VALUE_RANGE.each do |back_value|
-            next if attacker_suit == NULL
-            next if front_suit == NULL && back_suit != NULL
+            next if attacker_suit == Phalanx::Suits.null
+            next if front_suit == Phalanx::Suits.null && back_suit != Phalanx::Suits.null
 
-            attacker = Card.new(attacker_suit, attacker_value)
-            front = Card.new(front_suit, front_value)
-            back = Card.new(back_suit, back_value)
+            attacker = Phalanx::Card.new(suit: attacker_suit, value: attacker_value)
+            front = Phalanx::Card.new(suit: front_suit, value: front_value)
+            back = Phalanx::Card.new(suit: back_suit, value: back_value)
 
             battle = Battle.new(attacker:, front:, back:).resolve
 
