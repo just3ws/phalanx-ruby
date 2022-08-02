@@ -18,7 +18,7 @@ class Card
   end
 
   def to_s
-    [suit, value.to_s.rjust(1, '0')].join
+    [suit, value.to_s.rjust(2, '0')].join
   end
 end
 
@@ -77,8 +77,6 @@ end
 ATTACKER_VALUE_RANGE = FRONT_VALUE_RANGE = BACK_VALUE_RANGE = (1..11)
 ATTACKER_SUITS = FRONT_SUITS = BACK_SUITS = [SPADE, HEART, CLUB, DIAMOND, NULL].freeze
 
-battles = {}
-
 ATTACKER_SUITS.each do |attacker_suit|
   ATTACKER_VALUE_RANGE.each do |attacker_value|
     FRONT_SUITS.each do |front_suit|
@@ -94,12 +92,10 @@ ATTACKER_SUITS.each do |attacker_suit|
 
             battle = Battle.new(attacker:, front:, back:).resolve
 
-            battles.merge!(battle)
+            ap battle
           end
         end
       end
     end
   end
 end
-
-ap battles
