@@ -1,45 +1,59 @@
 # frozen_string_literal: true
 
+require_relative 'suits'
+require_relative 'card'
+
 module Phalanx
   class Attack
+    attr_accessor :damage, :front_health, :back_health
     attr_reader :attacker, :front, :back
 
-    def initialize(attacker, front, back)
+    def initialize(attacker:, front:, back:)
+      @damage = attacker.value
       @attacker = attacker
+
+      @front_health = front.value
       @front = front
+
+      @back_health = back.value
       @back = back
     end
 
+    def to_s
+      "#{attacker}|#{front}:#{back}"
+    end
+
     def resolve
-      damage = attacker.value
+      front_health = front.value - damage
 
-      if front.is_a?(Cards::Null) && back.is_a?(Cards::Null)
-        damage *= 2 if attacker.is_a?(Cards::Spade)
+      # Diamond defense bonus
+      front_health += front.value if front.suit == Phalanx::Suits.diamond && back.suit != Phalanx::Suits.null
 
-        return damage
-      end
+      @damage -= front.value
 
-      if back.is_a?(Cards::Null)
+      # Heart defense bonus
+      @damage -= front.value if front.suit == Phalanx::Suits.heart && back.suit == Phalanx::Suits.null
 
-      end
+      back_health = back.value - damage
 
-      defense = []
+      # Club attack bonus
+      back_health -= damage if attacker.suit == Phalanx::Suits.club
 
-      damage = attacker.value
+      @damage -= back.value
 
-      damage = attacker.value - front.value
+      # Heart defense bonus
+      @damage -= back.value if back.suit == Phalanx::Suits.heart
 
-      defense.push(damage)
+      # Spade attack bonus
+      @damage += damage if attacker.suit == Phalanx::Suits.spade
 
-      if attacker.suit == Suits.club
-
-      else
-        back.value
-      end
-
-      ap defense
-
-      damage
+      {
+        to_s => {
+          damage:,
+          front_health:,
+          back_health:
+        }
+      }
     end
   end
 end
