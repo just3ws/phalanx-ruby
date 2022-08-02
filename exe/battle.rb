@@ -4,6 +4,7 @@
 require 'amazing_print'
 require 'sorted_set'
 require 'json'
+require 'ostruct'
 
 CLUB = 'C'
 SPADE = 'S'
@@ -50,40 +51,84 @@ class Battle
   end
 
   def resolve
-    hist = []
+    attack_hist = []
+    front_hist = []
+    back_hist = []
+
+    before = nil
     damage = attacker.value
-    hist << damage.to_s
+    attack_hist << [before, damage]
 
+    before = nil
     front_health = front.value
+    front_hist << [before, front_health]
+
+    before = front_health
     front_health += front.value if front.suit == DIAMOND && back.suit != NULL
+    front_hist << [before, front_health]
+
+    before = front_health
     front_health -= attacker.value
+    front_hist << [before, front_health]
+
+    before = front_health
     front_health = 0 if front_health.negative?
+    front_hist <<  [before, front_health]
 
+    before = damage
     damage -= front.value
-    hist << damage.to_s
+    attack_hist << [before, damage]
 
+    before = damage
     damage = 0 if damage.negative?
-    hist << damage.to_s
+    attack_hist << [before, damage]
 
+    before = back_health
     back_health = back.value
+    back_hist <<  [before, back_health]
+
+    before = back_health
     back_health -= damage
+    back_hist << [before, back_health]
+
+    before = back_health
     back_health -= damage if attacker.suit == CLUB
+    back_hist << [before, back_health]
+
+    before = back_health
     back_health = 0 if back_health.negative?
+    back_hist <<  [before, back_health]
 
+    before = damage
     damage -= back.value
-    hist << damage.to_s
-    damage = 0 if damage.negative?
-    hist << damage.to_s
+    attack_hist << [before, damage]
 
+    before = damage
+    damage = 0 if damage.negative?
+    attack_hist << [before, damage]
+
+    before = damage
     damage -= back.value if back.suit == HEART
-    hist << damage.to_s
+    attack_hist << [before, damage]
+
+    before = damage
     damage = 0 if damage.negative?
-    hist << damage.to_s
+    attack_hist << [before, damage]
 
+    before = damage
     damage += damage if attacker.suit == SPADE
-    hist << damage.to_s
+    attack_hist << [before, damage]
 
-    [attacker, [front, front_health], [back, back_health], damage].to_json
+    # [attacker, [front, front_health], [back, back_health], damage].to_json
+    [
+      [:attacker, attacker.to_s],
+      [:front, front.to_s],
+      [:back, back.to_s],
+      [:damage, damage],
+      [:attack_hist, attack_hist],
+      [:front_hist, front_hist],
+      [:back_hist, back_hist]
+    ]
   end
 end
 
@@ -125,4 +170,4 @@ ATTACK_SUITS.each do |attack_suit|
   end
 end
 
-games.each { |game| puts(game) }
+games.each { |game| ap(game, multiline: false) }
