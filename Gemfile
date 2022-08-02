@@ -20,3 +20,7 @@ gem 'rubocop-thread_safety', require: false
 gem 'retest', require: false
 
 gem 'amazing_print'
+
+gem 'pry'
+
+gem 'byebug'
