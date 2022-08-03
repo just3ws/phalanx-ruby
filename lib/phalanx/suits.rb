@@ -2,19 +2,21 @@
 
 module Phalanx
   module Suits
-    CLUB = '♣'
+    CLUB    = '♣'
     DIAMOND = '♦'
-    HEART = '♥'
-    SPADE = '♠'
-    NULL = '_'
+    HEART   = '♥'
+    SPADE   = '♠'
+    NULL    = '∅'
 
-    ALL = [CLUB, DIAMOND, HEART, SPADE].freeze
+    REAL = [CLUB, DIAMOND, HEART, SPADE].freeze
+    ALL = [CLUB, DIAMOND, HEART, SPADE, NULL].freeze
 
     def self.null = NULL
     def self.club = CLUB
     def self.diamond = DIAMOND
     def self.heart = HEART
     def self.spade = SPADE
+    def self.real = REAL
     def self.all = ALL
   end
 end
