@@ -31,3 +31,4 @@ Style/FrozenStringLiteralComment: {Enabled: true, SafeAutoCorrect: true}
 Style/MultilineBlockChain: {Enabled: false}
 Style/RescueModifier: {Enabled: false}
 Style/RescueStandardError: {Enabled: false}
+Metrics/PerceivedComplexity: {Enabled: false}
