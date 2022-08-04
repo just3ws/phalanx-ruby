@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'card'
+require_relative '../card'
 
 module Phalanx
   module Cards
     class Diamond < Card
-      def initialize(value:)
-        super(value:, suit: Suits.diamond)
+      def initialize(value:, suit: Suits.diamond)
+        @suit = Suits.diamond
+        super(value:, suit:)
       end
     end
   end
