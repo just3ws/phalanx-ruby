@@ -4,42 +4,42 @@ require 'pry'
 
 require 'spec_helper'
 
-require 'phalanx/attack'
+require 'phalanx/battle'
 
 RSpec.shared_context 'attackable', shared_context: :metadata do
-  subject(:attack) { described_class.new(attacker:, front:, back:) }
+  subject(:battle) { described_class.new(attacker:, front:, back:) }
 
   context 'attacker card' do
-    it { expect(attack.attacker.suit).to eq(attacker.suit) }
-    it { expect(attack.damage).to eq(attacker.value) }
+    it { expect(battle.attacker.suit).to eq(attacker.suit) }
+    it { expect(battle.damage).to eq(attacker.value) }
   end
 
   context 'front card' do
-    it { expect(attack.front.suit).to eq(front.suit) }
-    it { expect(attack.front_health).to eq(front.value) }
+    it { expect(battle.front.suit).to eq(front.suit) }
+    it { expect(battle.front_health).to eq(front.value) }
   end
 
   context 'back card' do
-    it { expect(attack.back.suit).to eq(back.suit) }
-    it { expect(attack.back_health).to eq(back.value) }
+    it { expect(battle.back.suit).to eq(back.suit) }
+    it { expect(battle.back_health).to eq(back.value) }
   end
 
   describe '#attack!' do
-    before { attack.attack }
+    before { battle.attack }
 
     context 'damage' do
-      it { expect(attack.damage).to be_positive }
-      it { expect(attack.damage).to eq(expected.damage) }
+      it { expect(battle.damage).to be_positive }
+      it { expect(battle.damage).to eq(expected.damage) }
     end
 
     context 'front card' do
-      it { expect(attack.front_health).to be_negative }
-      it { expect(attack.front_health).to eq(expected.front_health) }
+      it { expect(battle.front_health).to be_negative }
+      it { expect(battle.front_health).to eq(expected.front_health) }
     end
 
     context 'back card' do
-      it { expect(attack.back_health).to be_negative }
-      it { expect(attack.back_health).to eq(expected.back_health) }
+      it { expect(battle.back_health).to be_negative }
+      it { expect(battle.back_health).to eq(expected.back_health) }
     end
   end
 end
@@ -49,16 +49,16 @@ module Phalanx
 
   ExpectedBattleState = Struct.new('ExpectedBattleState', :damage, :front_health, :back_health)
 
-  RSpec.describe Attack do
+  RSpec.describe Battle do
     describe '.parse' do
       let(:signature) { 'D7|C2:S8' }
 
-      subject(:attack) { described_class.parse(signature) }
+      subject(:battle) { described_class.parse(signature) }
 
-      it { expect(attack.attacker).to eq(Diamond.new(value: 7)) }
+      it { expect(battle.attacker).to eq(Diamond.new(value: 7)) }
 
-      it { expect(attack.front).to eq(Club.new(value: 2)) }
-      it { expect(attack.back).to eq(Spade.new(value: 8)) }
+      it { expect(battle.front).to eq(Club.new(value: 2)) }
+      it { expect(battle.back).to eq(Spade.new(value: 8)) }
     end
 
     context 'D9|N0:N0' do
@@ -68,7 +68,7 @@ module Phalanx
       let(:front) { Null.new }
       let(:back) { Null.new }
 
-      subject(:attack) { described_class.parse(signature) }
+      subject(:battle) { described_class.parse(signature) }
 
       include_examples 'attackable'
     end
@@ -178,7 +178,7 @@ module Phalanx
     #     let(:value) { 9 }
 
     #     it 'deals all damage to player' do
-    #       expect(attack.attack).to eq(value)
+    #       expect(battle.attack).to eq(value)
     #     end
     #   end
     # end
@@ -193,7 +193,7 @@ module Phalanx
     #     let(:value) { 9 }
 
     #     it 'deals all damage to player' do
-    #       expect(attack.attack).to eq(value)
+    #       expect(battle.attack).to eq(value)
     #     end
     #   end
 
@@ -221,7 +221,7 @@ module Phalanx
     #     let(:value) { 9 }
 
     #     it 'deals all damage to player' do
-    #       expect(attack.attack).to eq(value)
+    #       expect(battle.attack).to eq(value)
     #     end
     #   end
 
@@ -250,7 +250,7 @@ module Phalanx
     #     let(:value) { 9 }
 
     #     it 'deals double damage to player' do
-    #       expect(attack.attack).to eq(value)
+    #       expect(battle.attack).to eq(value)
     #     end
     #   end
 
@@ -294,12 +294,12 @@ end
 #   def initialize(attack:)
 #     @attack = attack
 #
-#     @front = CardReport.new(card: attack.front, health: attack.front_health)
-#     @back = CardReport.new(card: attack.back, health: attack.back_health)
+#     @front = CardReport.new(card: battle.front, health: battle.front_health)
+#     @back = CardReport.new(card: battle.back, health: battle.back_health)
 #   end
 #
 #   def player_damage
-#     attack.damage
+#     battle.damage
 #   end
 #
 #   def front_alive?
@@ -311,6 +311,6 @@ end
 #   end
 #
 #   def to_s
-#     @attack.to_s
+#     @battle.to_s
 #   end
 # end

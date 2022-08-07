@@ -4,7 +4,7 @@ require_relative 'suits'
 require_relative 'card'
 
 module Phalanx
-  class Attack
+  class Battle
     attr_reader :attacker, :front, :back, :damage, :front_health, :back_health
 
     def initialize(attacker: nil, front: nil, back: nil, str: nil)
