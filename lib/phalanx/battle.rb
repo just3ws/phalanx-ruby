@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+require 'memoized'
+
 require_relative 'suits'
 require_relative 'card'
 
 module Phalanx
   class Battle
+    include Memoized
+
     attr_reader :attacker, :front, :back, :damage, :front_health, :back_health
 
     def initialize(attacker: nil, front: nil, back: nil, str: nil)
@@ -36,34 +40,35 @@ module Phalanx
       "#{attacker}|#{front}:#{back}"
     end
 
-    def attack
-      @attack ||=
-        begin
-          @front_health = front.value - damage
+    memoize def attack
+      @front_health = front.value - damage
 
-          # Diamond defense bonus
-          @front_health += front.value if front.suit == Phalanx::Suits.diamond && back.suit != Phalanx::Suits.null
+      # Diamond defense bonus
+      @front_health += front.value if front.suit == Phalanx::Suits.diamond && back.suit != Phalanx::Suits.null
 
-          @damage -= front.value
+      @damage -= front.value
 
-          # Heart defense bonus
-          @damage -= front.value if front.suit == Phalanx::Suits.heart && back.suit == Phalanx::Suits.null
+      # Heart defense bonus
+      @damage -= front.value if front.suit == Phalanx::Suits.heart && back.suit == Phalanx::Suits.null
 
-          @back_health = back.value - damage
+      @back_health = back.value - damage
 
-          # Club attack bonus
-          @back_health -= damage if attacker.suit == Phalanx::Suits.club
+      # Club attack bonus
+      @back_health -= damage if attacker.suit == Phalanx::Suits.club
 
-          @damage -= back.value
+      @damage -= back.value
 
-          # Heart defense bonus
-          @damage -= back.value if back.suit == Phalanx::Suits.heart
+      # Heart defense bonus
+      @damage -= back.value if back.suit == Phalanx::Suits.heart
 
-          # Spade attack bonus
-          @damage += damage if attacker.suit == Phalanx::Suits.spade
+      # Spade attack bonus
+      @damage += damage if attacker.suit == Phalanx::Suits.spade
 
-          { to_s => { damage:, front_health:, back_health: } }
-        end
+      { to_s => { damage:, front_health:, back_health: } }
+    end
+
+    def attack!
+      attack
 
       self
     end
