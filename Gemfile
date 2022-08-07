@@ -7,6 +7,7 @@ gemspec
 
 gem 'rake', '~> 13.0'
 
+gem 'fuubar'
 gem 'rspec', '~> 3.11'
 
 gem 'rubocop', require: false

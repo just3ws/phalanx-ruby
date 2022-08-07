@@ -6,222 +6,121 @@ require 'spec_helper'
 
 require 'phalanx/attack'
 
+RSpec.shared_context 'attackable', shared_context: :metadata do
+  subject(:attack) { described_class.new(attacker:, front:, back:) }
+
+  context 'attacker card' do
+    it { expect(attack.attacker.suit).to eq(attacker.suit) }
+    it { expect(attack.damage).to eq(attacker.value) }
+  end
+
+  context 'front card' do
+    it { expect(attack.front.suit).to eq(front.suit) }
+    it { expect(attack.front_health).to eq(front.value) }
+  end
+
+  context 'back card' do
+    it { expect(attack.back.suit).to eq(back.suit) }
+    it { expect(attack.back_health).to eq(back.value) }
+  end
+
+  describe '#attack!' do
+    before { attack.attack }
+
+    context 'damage' do
+      it { expect(attack.damage).to be_positive }
+      it { expect(attack.damage).to eq(expected.damage) }
+    end
+
+    context 'front card' do
+      it { expect(attack.front_health).to be_negative }
+      it { expect(attack.front_health).to eq(expected.front_health) }
+    end
+
+    context 'back card' do
+      it { expect(attack.back_health).to be_negative }
+      it { expect(attack.back_health).to eq(expected.back_health) }
+    end
+  end
+end
+
 module Phalanx
+  include Cards
+
   ExpectedBattleState = Struct.new('ExpectedBattleState', :damage, :front_health, :back_health)
 
   RSpec.describe Attack do
-    subject(:attack) { described_class.new(attacker:, front:, back:) }
+    describe '.parse' do
+      let(:signature) { 'D7|C2:S8' }
+
+      subject(:attack) { described_class.parse(signature) }
+
+      it { expect(attack.attacker).to eq(Diamond.new(value: 7)) }
+
+      it { expect(attack.front).to eq(Club.new(value: 2)) }
+      it { expect(attack.back).to eq(Spade.new(value: 8)) }
+    end
+
+    context 'D9|N0:N0' do
+      let(:signature) { 'D7|C2:S8' }
+      let(:expected) { ExpectedBattleState.new(9, -9, -9) }
+      let(:attacker) { Diamond.new(value: 9) }
+      let(:front) { Null.new }
+      let(:back) { Null.new }
+
+      subject(:attack) { described_class.parse(signature) }
+
+      include_examples 'attackable'
+    end
 
     context 'H9|N0:N0' do
-      let(:attacker) { Cards::Heart.new(value: 9) }
-      let(:front) { Cards::Null.new }
-      let(:back) { Cards::Null.new }
+      let(:attacker) { Heart.new(value: 9) }
+      let(:front) { Null.new }
+      let(:back) { Null.new }
 
       let(:expected) { ExpectedBattleState.new(9, -9, -9) }
 
-      context 'attacker card' do
-        it { expect(attack.attacker.suit).to eq(attacker.suit) }
-        it { expect(attack.damage).to eq(attacker.value) }
-      end
-
-      context 'front card' do
-        it { expect(attack.front.suit).to eq(front.suit) }
-        it { expect(attack.front_health).to eq(front.value) }
-      end
-
-      context 'back card' do
-        it { expect(attack.back.suit).to eq(back.suit) }
-        it { expect(attack.back_health).to eq(back.value) }
-      end
-
-      describe '#attack!' do
-        before { attack.attack }
-
-        context 'damage' do
-          it { expect(attack.damage).to be_positive }
-          it { expect(attack.damage).to eq(expected.damage) }
-        end
-
-        context 'front card' do
-          it { expect(attack.front_health).to be_negative }
-          it { expect(attack.front_health).to eq(expected.front_health) }
-        end
-
-        context 'back card' do
-          it { expect(attack.back_health).to be_negative }
-          it { expect(attack.back_health).to eq(expected.back_health) }
-        end
-      end
+      include_examples 'attackable'
     end
 
     context 'S9|N0:N0' do
-      let(:attacker) { Cards::Spade.new(value: 9) }
-      let(:front) { Cards::Null.new }
-      let(:back) { Cards::Null.new }
+      let(:attacker) { Spade.new(value: 9) }
+      let(:front) { Null.new }
+      let(:back) { Null.new }
 
       let(:expected) { ExpectedBattleState.new(18, -9, -9) }
 
-      context 'attacker card' do
-        it { expect(attack.attacker.suit).to eq(attacker.suit) }
-        it { expect(attack.damage).to eq(attacker.value) }
-      end
-
-      context 'front card' do
-        it { expect(attack.front.suit).to eq(front.suit) }
-        it { expect(attack.front_health).to eq(front.value) }
-      end
-
-      context 'back card' do
-        it { expect(attack.back.suit).to eq(back.suit) }
-        it { expect(attack.back_health).to eq(back.value) }
-      end
-
-      describe '#attack!' do
-        before { attack.attack }
-
-        context 'damage' do
-          it { expect(attack.damage).to be_positive }
-          it { expect(attack.damage).to eq(expected.damage) }
-        end
-
-        context 'front card' do
-          it { expect(attack.front_health).to be_negative }
-          it { expect(attack.front_health).to eq(expected.front_health) }
-        end
-
-        context 'back card' do
-          it { expect(attack.back_health).to be_negative }
-          it { expect(attack.back_health).to eq(expected.back_health) }
-        end
-      end
+      include_examples 'attackable'
     end
 
     context 'C9|N0:N0' do
-      let(:attacker) { Cards::Club.new(value: 9) }
-      let(:front) { Cards::Null.new }
-      let(:back) { Cards::Null.new }
+      let(:attacker) { Club.new(value: 9) }
+      let(:front) { Null.new }
+      let(:back) { Null.new }
 
       let(:expected) { ExpectedBattleState.new(9, -9, -18) }
 
-      context 'attacker card' do
-        it { expect(attack.attacker.suit).to eq(attacker.suit) }
-        it { expect(attack.damage).to eq(attacker.value) }
-      end
-
-      context 'front card' do
-        it { expect(attack.front.suit).to eq(front.suit) }
-        it { expect(attack.front_health).to eq(front.value) }
-      end
-
-      context 'back card' do
-        it { expect(attack.back.suit).to eq(back.suit) }
-        it { expect(attack.back_health).to eq(back.value) }
-      end
-
-      describe '#attack!' do
-        before { attack.attack }
-
-        context 'damage' do
-          it { expect(attack.damage).to be_positive }
-          it { expect(attack.damage).to eq(expected.damage) }
-        end
-
-        context 'front card' do
-          it { expect(attack.front_health).to be_negative }
-          it { expect(attack.front_health).to eq(expected.front_health) }
-        end
-
-        context 'back card' do
-          it { expect(attack.back_health).to be_negative }
-          it { expect(attack.back_health).to eq(expected.back_health) }
-        end
-      end
+      include_examples 'attackable'
     end
 
     context 'C9|D3:D2' do
-      let(:attacker) { Cards::Club.new(value: 9) }
-      let(:front) { Cards::Diamond.new(value: 3) }
-      let(:back) { Cards::Diamond.new(value: 2) }
+      let(:attacker) { Club.new(value: 9) }
+      let(:front) { Diamond.new(value: 3) }
+      let(:back) { Diamond.new(value: 2) }
 
       let(:expected) { ExpectedBattleState.new(4, -3, -10) }
 
-      context 'attacker card' do
-        it { expect(attack.attacker.suit).to eq(attacker.suit) }
-        it { expect(attack.damage).to eq(attacker.value) }
-      end
-
-      context 'front card' do
-        it { expect(attack.front.suit).to eq(front.suit) }
-        it { expect(attack.front_health).to eq(front.value) }
-      end
-
-      context 'back card' do
-        it { expect(attack.back.suit).to eq(back.suit) }
-        it { expect(attack.back_health).to eq(back.value) }
-      end
-
-      describe '#attack!' do
-        before { attack.attack }
-
-        context 'damage' do
-          it { expect(attack.damage).to be_positive }
-          it { expect(attack.damage).to eq(expected.damage) }
-        end
-
-        context 'front card' do
-          it { expect(attack.front_health).to be_negative }
-          it { expect(attack.front_health).to eq(expected.front_health) }
-        end
-
-        context 'back card' do
-          it { expect(attack.back_health).to be_negative }
-          it { expect(attack.back_health).to eq(expected.back_health) }
-        end
-      end
+      include_examples 'attackable'
     end
 
     context 'C7|D3:D2' do
-      let(:attacker) { Cards::Club.new(value: 7) }
-      let(:front) { Cards::Diamond.new(value: 3) }
-      let(:back) { Cards::Diamond.new(value: 2) }
+      let(:attacker) { Club.new(value: 7) }
+      let(:front) { Diamond.new(value: 3) }
+      let(:back) { Diamond.new(value: 2) }
 
       let(:expected) { ExpectedBattleState.new(2, -1, -6) }
 
-      context 'before attacking' do
-        context 'attacker card' do
-          it { expect(attack.attacker.suit).to eq(attacker.suit) }
-          it { expect(attack.damage).to eq(attacker.value) }
-        end
-
-        context 'front card' do
-          it { expect(attack.front.suit).to eq(front.suit) }
-          it { expect(attack.front_health).to eq(front.value) }
-        end
-
-        context 'back card' do
-          it { expect(attack.back.suit).to eq(back.suit) }
-          it { expect(attack.back_health).to eq(back.value) }
-        end
-      end
-
-      context 'after attacking' do
-        before { attack.attack }
-
-        context 'damage' do
-          it { expect(attack.damage).to be_positive }
-          it { expect(attack.damage).to eq(expected.damage) }
-        end
-
-        context 'front card' do
-          it { expect(attack.front_health).to be_negative }
-          it { expect(attack.front_health).to eq(expected.front_health) }
-        end
-
-        context 'back card' do
-          it { expect(attack.back_health).to be_negative }
-          it { expect(attack.back_health).to eq(expected.back_health) }
-        end
-      end
+      include_examples 'attackable'
     end
 
     context 'C|D:H'
@@ -274,8 +173,8 @@ module Phalanx
 
     #   context '_:_' do
     #     let(:attacker) { Card.new(suit:, value:) }
-    #     let(:back) { Cards::Null.new }
-    #     let(:front) { Cards::Null.new }
+    #     let(:back) { Null.new }
+    #     let(:front) { Null.new }
     #     let(:value) { 9 }
 
     #     it 'deals all damage to player' do
@@ -289,8 +188,8 @@ module Phalanx
 
     #   context '_:_' do
     #     let(:attacker) { Card.new(suit:, value:) }
-    #     let(:back) { Cards::Null.new }
-    #     let(:front) { Cards::Null.new }
+    #     let(:back) { Null.new }
+    #     let(:front) { Null.new }
     #     let(:value) { 9 }
 
     #     it 'deals all damage to player' do
@@ -317,8 +216,8 @@ module Phalanx
 
     #   context '_:_' do
     #     let(:attacker) { Card.new(suit:, value:) }
-    #     let(:back) { Cards::Null.new }
-    #     let(:front) { Cards::Null.new }
+    #     let(:back) { Null.new }
+    #     let(:front) { Null.new }
     #     let(:value) { 9 }
 
     #     it 'deals all damage to player' do
@@ -346,8 +245,8 @@ module Phalanx
 
     #   context '_:_' do
     #     let(:attacker) { Card.new(suit:, value:) }
-    #     let(:back) { Cards::Null.new }
-    #     let(:front) { Cards::Null.new }
+    #     let(:back) { Null.new }
+    #     let(:front) { Null.new }
     #     let(:value) { 9 }
 
     #     it 'deals double damage to player' do

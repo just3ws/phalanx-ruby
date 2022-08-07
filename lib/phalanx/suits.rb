@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'cards'
+
 module Phalanx
   module Suits
     CLUB_GLYPH = '♣'
@@ -16,6 +18,29 @@ module Phalanx
 
     SPADE_GLYPH = '♠'
     SPADE_LETTER = 'S'
+
+    GLYPH_TO_LETTER = {
+      '∅' => 'N',
+      '♠' => 'S',
+      '♣' => 'C',
+      '♥' => 'H',
+      '♦' => 'D'
+    }.freeze
+
+    LETTER_TO_GLYPH = GLYPH_TO_LETTER.invert
+
+    TYPE_LOOKUP = {
+      'C' => Cards::Club,
+      'D' => Cards::Diamond,
+      'H' => Cards::Heart,
+      'N' => Cards::Null,
+      'S' => Cards::Spade,
+      '∅' => Cards::Null,
+      '♠' => Cards::Spade,
+      '♣' => Cards::Club,
+      '♥' => Cards::Heart,
+      '♦' => Cards::Diamond
+    }.freeze
 
     ALL_GLYPHS = [CLUB_GLYPH, DIAMOND_GLYPH, HEART_GLYPH, SPADE_GLYPH, NULL_GLYPH].freeze
     ALL_LETTERS = [CLUB_LETTER, DIAMOND_LETTER, HEART_LETTER, SPADE_LETTER, NULL_LETTER].freeze

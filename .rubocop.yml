@@ -21,6 +21,8 @@ AllCops:
 
 Lint/EmptyBlock: {Enabled: false}
 Lint/SuppressedException: {Enabled: false}
+Metrics/ModuleLength: {Enabled: false}
+Metrics/PerceivedComplexity: {Enabled: false}
 Naming/InclusiveLanguage: {Enabled: false}
 RSpec/ContextWording: {Enabled: false}
 RSpec/EmptyExampleGroup: {Enabled: false}
@@ -31,4 +33,3 @@ Style/FrozenStringLiteralComment: {Enabled: true, SafeAutoCorrect: true}
 Style/MultilineBlockChain: {Enabled: false}
 Style/RescueModifier: {Enabled: false}
 Style/RescueStandardError: {Enabled: false}
-Metrics/PerceivedComplexity: {Enabled: false}

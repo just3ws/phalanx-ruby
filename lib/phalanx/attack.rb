@@ -7,7 +7,9 @@ module Phalanx
   class Attack
     attr_reader :attacker, :front, :back, :damage, :front_health, :back_health
 
-    def initialize(attacker:, front:, back:)
+    def initialize(attacker: nil, front: nil, back: nil, str: nil)
+      attacker, front, back = parse(str) if str
+
       @damage = attacker.value
       @attacker = attacker
 
@@ -16,6 +18,18 @@ module Phalanx
 
       @back_health = back.value
       @back = back
+    end
+
+    def self.parse(str)
+      attacker, column = str.split('|')
+
+      front, back = column.split(':')
+
+      attacker = Card.parse(attacker)
+      front = Card.parse(front)
+      back = Card.parse(back)
+
+      new(attacker:, front:, back:)
     end
 
     def to_s

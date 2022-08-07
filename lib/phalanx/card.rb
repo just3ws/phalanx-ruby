@@ -14,6 +14,15 @@ module Phalanx
       @value = suit == Suits.null ? 0 : value
     end
 
+    def self.parse(str)
+      suit, value = str.partition(/\d+/).reject(&:empty?)
+
+      card_klass = Suits::TYPE_LOOKUP[suit]
+      value = Integer(value)
+
+      card_klass.new(value:)
+    end
+
     def inspect
       to_s
     end
