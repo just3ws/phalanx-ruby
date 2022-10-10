@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'faker'
+
 module Phalanx
   class Card
     attr_reader :pip, :val, :health
@@ -58,9 +60,10 @@ module Phalanx
   end
 
   class Player
-    attr_reader :deck, :hand, :health
+    attr_reader :deck, :hand, :health, :name
 
-    def initialize(deck:, hand:, health: 20)
+    def initialize(deck:, hand:, name:, health: 20)
+      @name = name
       @deck = deck
       @hand = hand
       @health = health
@@ -73,25 +76,50 @@ module Phalanx
     def count
       cards.count
     end
+
+    def defend!(dmg)
+      @health -= dmg
+    end
+
+    def alive?
+      health.positive?
+    end
   end
 end
 
 RSpec.describe Phalanx do
   describe Phalanx::Player do
-    subject(:player) { described_class.new(deck:, hand:) }
+    subject(:player) { described_class.new(deck:, hand:, name:) }
 
+    let(:name) { Faker::TvShows::GameOfThrones.character }
     let(:deck) { Phalanx::Deck.new }
     let(:hand) { Phalanx::Hand.new }
 
+    it { expect(player.name).to eq(name) }
     it { expect(player.health).to eq(20) }
     it { expect(player.deck.count).to eq(32) }
     it { expect(player.hand.count).to be_zero }
+    it { expect(player).to be_alive }
 
     it do
       player.draw!(4)
 
       expect(player.deck.count).to eq(28)
       expect(player.hand.count).to eq(4)
+    end
+
+    it { expect { player.defend!(3) }.to change(player, :health).from(20).to(17) }
+
+    it do
+      player.defend!(18)
+
+      expect(player.health).to eq(2)
+      expect(player).to be_alive
+
+      player.defend!(2)
+
+      expect(player.health).to be_zero
+      expect(player).not_to be_alive
     end
   end
 
