@@ -8,3 +8,9 @@ require_relative 'phalanx/cards'
 module Phalanx
   class Error < StandardError; end
 end
+
+class Phalanx::Player # :nodoc:
+  attr_reader :hand, :deck
+end
+
+
