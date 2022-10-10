@@ -26,6 +26,8 @@ Metrics/PerceivedComplexity: {Enabled: false}
 Naming/InclusiveLanguage: {Enabled: false}
 RSpec/ContextWording: {Enabled: false}
 RSpec/EmptyExampleGroup: {Enabled: false}
+RSpec/ExampleLength: {Enabled: false}
+RSpec/MultipleExpectations: {Enabled: false}
 RSpec/RepeatedExampleGroupBody: {Enabled: false}
 Style/BlockDelimiters: {Enabled: false}
 Style/Documentation: {Enabled: false}
@@ -33,3 +35,4 @@ Style/FrozenStringLiteralComment: {Enabled: true, SafeAutoCorrect: true}
 Style/MultilineBlockChain: {Enabled: false}
 Style/RescueModifier: {Enabled: false}
 Style/RescueStandardError: {Enabled: false}
+RSpec/MultipleDescribes: {Enabled: false}

@@ -2,66 +2,9 @@
 # frozen_string_literal: true
 
 require 'phalanx'
-
 require 'amazing_print'
-
 require 'byebug'
 require 'pry'
 
 module Phalanx
 end
-
-binding.pry
-puts
-
-# class Rows
-#   attr_reader :front, :back
-#
-#   def initialize(front:, back:)
-#     @front = front
-#     @back = back
-#   end
-# end
-
-# class Player
-#   attr_reader :hand, :rows, :deck, :discard, :damage
-#
-#   def initialize(hand:, rows:, deck:, discard: [], damage: [])
-#     @hand = hand
-#     @rows = rows
-#     @deck = deck
-#     @discard = discard
-#     @damage = damage
-#   end
-# end
-
-# class Deck
-#   def initialize
-#     @deck = Suits.all.flat_map { |suit| Values.numbered_cards.map { |value| Card.new(suit, value) } }
-#     @deck.shuffle!
-#   end
-#
-#   def draw(count)
-#     @deck.shift(count)
-#   end
-# end
-
-# module Game
-#   def self.make_player
-#     deck = Deck.new
-#
-#     hand = deck.draw(12)
-#     hand.sort!.reverse!
-#
-#     rows = Rows.new(front: hand.shift(4), back: hand.shift(4))
-#
-#     Player.new(hand:, rows:, deck:)
-#   end
-# end
-
-# player_a = Phalanx::Game.make_player
-# ap [:player_a, player_a]
-
-# player_b = Phalanx::Game.make_player
-# ap [:player_b, player_b]
-#
