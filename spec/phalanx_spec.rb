@@ -31,6 +31,10 @@ module Phalanx
     def draw!(count)
       cards.shift(count)
     end
+
+    def count
+      cards.count
+    end
   end
 
   class Hand
@@ -47,14 +51,27 @@ module Phalanx
     def count
       cards.count
     end
+
+    def <<(new_cards)
+      cards.append(*new_cards)
+    end
   end
 
   class Player
-    attr_reader :deck, :hand
+    attr_reader :deck, :hand, :health
 
-    def initialize(deck:, hand:)
+    def initialize(deck:, hand:, health: 20)
       @deck = deck
       @hand = hand
+      @health = health
+    end
+
+    def draw!(count)
+      hand << deck.draw!(count)
+    end
+
+    def count
+      cards.count
     end
   end
 end
@@ -66,9 +83,15 @@ RSpec.describe Phalanx do
     let(:deck) { Phalanx::Deck.new }
     let(:hand) { Phalanx::Hand.new }
 
+    it { expect(player.health).to eq(20) }
+    it { expect(player.deck.count).to eq(32) }
+    it { expect(player.hand.count).to be_zero }
+
     it do
-      expect(player.deck.cards.count).to eq(32)
-      expect(player.hand.cards.count).to be_zero
+      player.draw!(4)
+
+      expect(player.deck.count).to eq(28)
+      expect(player.hand.count).to eq(4)
     end
   end
 
@@ -87,13 +110,13 @@ RSpec.describe Phalanx do
     it { expect(deck.vals).to include(2, 3, 4, 5, 6, 7, 8, 9) }
     it { expect(deck.vals).not_to include(1, 10) }
 
-    it { expect(deck.cards.count).to eq(32) }
+    it { expect(deck.count).to eq(32) }
 
     it do
       cards = deck.draw!(4)
 
       expect(cards.count).to eq(4)
-      expect(deck.cards.count).to eq(28)
+      expect(deck.count).to eq(28)
     end
   end
 
