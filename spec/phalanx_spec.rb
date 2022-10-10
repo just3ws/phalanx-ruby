@@ -87,7 +87,7 @@ module Phalanx
   end
 
   class Game
-    attr_reader :player1, :player2
+    attr_reader :player1, :player2, :state
 
     def initialize(player1:, player2:)
       @player1 = player1
@@ -104,6 +104,7 @@ RSpec.describe Phalanx do
       Phalanx::Player.new(deck: Phalanx::Deck.new, hand: Phalanx::Hand.new,
                           name: Faker::TvShows::GameOfThrones.character)
     }
+
     let(:player2) {
       Phalanx::Player.new(deck: Phalanx::Deck.new, hand: Phalanx::Hand.new,
                           name: Faker::TvShows::GameOfThrones.character)
