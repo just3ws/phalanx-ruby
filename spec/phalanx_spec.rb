@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'faker'
+require 'state_machines'
+require 'amazing_print'
 
 module Phalanx
   class Card
@@ -60,13 +62,20 @@ module Phalanx
   end
 
   class Player
-    attr_reader :deck, :hand, :health, :name
+    attr_reader :deck, :hand, :health, :name, :discard_pile, :graveyard_pile, :army
 
     def initialize(deck:, hand:, name:, health: 20)
       @name = name
       @deck = deck
       @hand = hand
       @health = health
+      @discard_pile = []
+      @graveyard_pile = []
+      @army = Army.new
+    end
+
+    def deploy!
+      # army << draw!(8)
     end
 
     def draw!(count)
@@ -91,7 +100,28 @@ module Phalanx
 
     def initialize(player1:, player2:)
       @player1 = player1
+      player1.draw!(12)
+      player1.deploy!
+
       @player2 = player2
+      player2.draw!(12)
+      player2.deploy!
+    end
+  end
+
+  class Army
+    attr_reader :cards
+
+    def initialize(cards: [])
+      @cards = cards
+    end
+
+    def <<(new_cards)
+      cards.append(*new_cards)
+    end
+
+    def empty?
+      cards.empty?
     end
   end
 end
@@ -110,9 +140,12 @@ RSpec.describe Phalanx do
                           name: Faker::TvShows::GameOfThrones.character)
     }
 
-    it do
+    it 'play a game' do
       expect(game.player1).to eq(player1)
       expect(game.player2).to eq(player2)
+
+      expect(game.player1.hand.count).to eq(12)
+      expect(game.player2.hand.count).to eq(12)
     end
   end
 
@@ -128,6 +161,9 @@ RSpec.describe Phalanx do
     it { expect(player.deck.count).to eq(32) }
     it { expect(player.hand.count).to be_zero }
     it { expect(player).to be_alive }
+    it { expect(player.discard_pile).to be_empty }
+    it { expect(player.graveyard_pile).to be_empty }
+    it { expect(player.army).to be_empty }
 
     it do
       player.draw!(4)
