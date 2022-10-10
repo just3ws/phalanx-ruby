@@ -85,9 +85,36 @@ module Phalanx
       health.positive?
     end
   end
+
+  class Game
+    attr_reader :player1, :player2
+
+    def initialize(player1:, player2:)
+      @player1 = player1
+      @player2 = player2
+    end
+  end
 end
 
 RSpec.describe Phalanx do
+  describe Phalanx::Game do
+    subject(:game) { described_class.new(player1:, player2:) }
+
+    let(:player1) {
+      Phalanx::Player.new(deck: Phalanx::Deck.new, hand: Phalanx::Hand.new,
+                          name: Faker::TvShows::GameOfThrones.character)
+    }
+    let(:player2) {
+      Phalanx::Player.new(deck: Phalanx::Deck.new, hand: Phalanx::Hand.new,
+                          name: Faker::TvShows::GameOfThrones.character)
+    }
+
+    it do
+      expect(game.player1).to eq(player1)
+      expect(game.player2).to eq(player2)
+    end
+  end
+
   describe Phalanx::Player do
     subject(:player) { described_class.new(deck:, hand:, name:) }
 
