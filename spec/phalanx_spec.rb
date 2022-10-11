@@ -112,6 +112,14 @@ module Phalanx
   class Army
     attr_reader :cards
 
+    def row1
+      cards[0, 4]
+    end
+
+    def row2
+      cards[4, 4]
+    end
+
     def initialize(cards: [])
       @cards = cards
     end
