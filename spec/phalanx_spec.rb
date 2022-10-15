@@ -112,14 +112,6 @@ module Phalanx
   class Army
     attr_reader :cards
 
-    def row1
-      cards[0, 4]
-    end
-
-    def row2
-      cards[4, 4]
-    end
-
     def initialize(cards: [])
       @cards = cards
     end
@@ -132,9 +124,27 @@ module Phalanx
       cards.empty?
     end
   end
+
+  class Column
+    attr_reader :front, :back
+
+    def initialize(front:, back:)
+      @front = front
+      @back = back
+    end
+  end
 end
 
 RSpec.describe Phalanx do
+  describe Phalanx::Column do
+    subject(:column) { described_class.new(front:, back:) }
+
+    let(:front) { Phalanx::Card.new(pip: :spade, val: 3) }
+    let(:back) { Phalanx::Card.new(pip: :club, val: 5) }
+
+    it { expect(column).to be_instance_of(described_class) }
+  end
+
   describe Phalanx::Game do
     subject(:game) { described_class.new(player1:, player2:) }
 
