@@ -13,5 +13,7 @@ module Phalanx
       player2.draw!(12)
       player2.deploy!
     end
+
+    def game_over; end
   end
 end

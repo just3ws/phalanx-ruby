@@ -30,10 +30,12 @@ RSpec.describe Phalanx::Player do
 
     expect(player.health).to eq(2)
     expect(player).to be_alive
+    expect(player).not_to be_dead
 
     player.defend!(2)
 
     expect(player.health).to be_zero
     expect(player).not_to be_alive
+    expect(player).to be_dead
   end
 end

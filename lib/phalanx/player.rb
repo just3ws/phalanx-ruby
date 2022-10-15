@@ -33,5 +33,9 @@ module Phalanx
     def alive?
       health.positive?
     end
+
+    def dead?
+      !alive?
+    end
   end
 end
